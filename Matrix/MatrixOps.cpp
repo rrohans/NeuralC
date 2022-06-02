@@ -46,7 +46,7 @@ Matrix MatrixOps::subtract(Matrix &m1, Matrix &m2)
     return result;
 }
 
-Matrix MatrixOps::hadamard(Matrix &m1, Matrix &m2)
+Matrix MatrixOps::elementwiseMultiply(Matrix &m1, Matrix &m2)
 {
     // perform elementwise multiplication
     if (!verifyDimensions(m1, m2))
@@ -88,7 +88,7 @@ Matrix MatrixOps::multiply(Matrix &m1, Matrix &m2)
     return result;
 }
 
-Matrix MatrixOps::transform(float (*f)(float), Matrix &m)
+Matrix MatrixOps::map(float (*f)(float), Matrix &m)
 {
     // apply a transformation function to each element
     // of the matrix
@@ -101,7 +101,7 @@ Matrix MatrixOps::transform(float (*f)(float), Matrix &m)
     return result;
 }
 
-Matrix MatrixOps::addScalar(Matrix &m, float c)
+Matrix MatrixOps::add(Matrix &m, float c)
 {
     // add a scalar to each element
     Matrix result(m.numRows, m.numCols);

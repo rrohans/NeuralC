@@ -12,13 +12,13 @@ namespace MatrixOps
 
     Matrix subtract(Matrix &m1, Matrix &m2);
 
-    Matrix hadamard(Matrix &m1, Matrix &m2);
+    Matrix elementwiseMultiply(Matrix &m1, Matrix &m2);
 
     Matrix multiply(Matrix &m1, Matrix &m2);
 
-    Matrix transform(float (*f)(float), Matrix &m);
+    Matrix map(float (*f)(float), Matrix &m);
 
-    Matrix addScalar(Matrix &m, float c);
+    Matrix add(Matrix &m, float c);
 
     Matrix scale(Matrix &m, float c);
 
