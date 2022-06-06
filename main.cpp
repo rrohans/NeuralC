@@ -23,6 +23,7 @@ int main(int argc, char** argv)
     auto images = Image::readDataset("mnist_train.csv", numTrainImages);
     auto testImages = Image::readDataset("mnist_test.csv", numTestImages);
 
+
     // Create/Load NN
     NeuralNetwork nn(784, 300, 10, 0.2);
 //    NeuralNetwork nn("fullData");

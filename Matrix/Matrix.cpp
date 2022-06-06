@@ -254,4 +254,11 @@ void Matrix::copy(Matrix m)
             data[i][j] = m.data[i][j];
 }
 
+float Matrix::operator()(int i, int j)
+{
+    return data[i][j];
+}
+
+
+
 Matrix::Matrix() = default;

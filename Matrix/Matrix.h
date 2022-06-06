@@ -43,4 +43,6 @@ struct Matrix
 
     void copy(Matrix m);
 
+    float operator() (int i, int j);
+
 };
