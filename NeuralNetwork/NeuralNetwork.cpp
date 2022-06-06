@@ -11,6 +11,10 @@
 #include "../Utils/ProgressBar/ProgressBar.h"
 #include "../Utils/ScopedTimer/ScopedTimer.h"
 
+#if (defined(_WIN32) || defined(__WIN32__))
+#define mkdir(A, B) mkdir(A)
+#endif
+
 using namespace MatrixOps;
 using namespace Activations;
 
@@ -24,17 +28,17 @@ NeuralNetwork::NeuralNetwork(int input, int hidden, int output, float lRate)
     hiddenWeights = Matrix(hiddenLayer, inputLayer);
     outputWeights = Matrix(outputLayer, hiddenLayer);
 
-    hiddenWeights.randomize(hiddenLayer);
-    outputWeights.randomize(outputLayer);
+    hiddenWeights.randomize(1);
+    outputWeights.randomize(1);
 }
 
 void NeuralNetwork::train(Matrix &input, Matrix &output)
 {
     // perform feed forward
     auto hiddenInputs = multiply(hiddenWeights, input);
-    auto hiddenOutputs = transform(sigmoid, hiddenInputs);
+    auto hiddenOutputs = map(sigmoid, hiddenInputs);
     auto finalInputs = multiply(outputWeights, hiddenOutputs);
-    auto finalOutputs = transform(sigmoid, finalInputs);
+    auto finalOutputs = map(sigmoid, finalInputs);
 
     // calculate errors
     auto outputErrors = subtract(output, finalOutputs);
@@ -43,7 +47,7 @@ void NeuralNetwork::train(Matrix &input, Matrix &output)
 
     // backpropagation (final outputs)
     auto sigmoidPrimed = sigmoidPrimeValues(finalOutputs);
-    auto multiplySPV = hadamard(outputErrors, sigmoidPrimed);
+    auto multiplySPV = elementwiseMultiply(outputErrors, sigmoidPrimed);
     auto transposedHiddenOutputs = transpose(hiddenOutputs);
     auto dMatrix = multiply(multiplySPV, transposedHiddenOutputs);
     auto sMatrix = scale(dMatrix, learningRate);
@@ -52,7 +56,7 @@ void NeuralNetwork::train(Matrix &input, Matrix &output)
 
 //     backpropagation (hidden outputs)
     auto sigmoidPrimed2 = sigmoidPrimeValues(hiddenOutputs);
-    auto multiplySPV2 = hadamard(hiddenErrors, sigmoidPrimed2);
+    auto multiplySPV2 = elementwiseMultiply(hiddenErrors, sigmoidPrimed2);
     auto transposedInputs = transpose(input);
     auto dMatrix2 = multiply(multiplySPV2, transposedInputs);
     auto sMatrix2 = scale(dMatrix2, learningRate);
@@ -85,7 +89,7 @@ void NeuralNetwork::batchTrainImages(Image **images, int batchSize, int epochs)
             if (i > 0 && i % 100 == 0)
                 printf("Images complete: %d\n", i);
         }
-        p.update(epoch);
+        p.update(epoch + 1);
         p.print("Loss - " + std::to_string(loss / (float) batchSize));
 
         loss = 0.0f;
@@ -97,11 +101,7 @@ int NeuralNetwork::predict(Image *image)
     // predict label given image
     image->imageData.flatten(0);
 
-    auto hiddenInputs = multiply(hiddenWeights, image->imageData);
-    auto hiddenOutputs = transform(sigmoid, hiddenInputs);
-    auto finalInputs = multiply(outputWeights, hiddenOutputs);
-    auto finalOutputs = transform(sigmoid, finalInputs);
-    auto result = softmax(finalOutputs);
+    auto result = feedForward(image->imageData);
     result.flatten(0);
 
     return result.argMax();
@@ -203,15 +203,22 @@ float NeuralNetwork::calculateLoss(Image *image)
     // predict label given image
     image->imageData.flatten(0);
 
-    auto hiddenInputs = multiply(hiddenWeights, image->imageData);
-    auto hiddenOutputs = transform(sigmoid, hiddenInputs);
-    auto finalInputs = multiply(outputWeights, hiddenOutputs);
-    auto finalOutputs = transform(sigmoid, finalInputs);
-    auto result = softmax(finalOutputs);
+    auto result = feedForward(image->imageData);
     result.flatten(0);
 
     auto weight = result.data[result.argMax()][0];
 
-    return (float) pow((weight - 1), 2);
+    return (float) std::pow((weight - 1.0), 2);
 
+}
+
+Matrix NeuralNetwork::feedForward(Matrix m)
+{
+    auto hiddenInputs = multiply(hiddenWeights, m);
+    auto hiddenOutputs = map(sigmoid, hiddenInputs);
+    auto finalInputs = multiply(outputWeights, hiddenOutputs);
+    auto finalOutputs = map(sigmoid, finalInputs);
+    auto result = softmax(finalOutputs);
+
+    return result;
 }

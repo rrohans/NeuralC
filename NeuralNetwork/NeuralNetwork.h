@@ -32,4 +32,6 @@ struct NeuralNetwork
 
 private:
     void train(Matrix &input, Matrix &output);
+
+    Matrix feedForward(Matrix m);
 };
