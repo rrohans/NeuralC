@@ -1,8 +1,8 @@
 
 #include <cmath>
-#include <sys/stat.h>
+#include <filesystem>
 #include <fstream>
-#include <unistd.h>
+
 
 #include "NeuralNetwork.h"
 #include "../Matrix/MatrixOps.h"
@@ -11,9 +11,6 @@
 #include "../Utils/ProgressBar/ProgressBar.h"
 #include "../Utils/ScopedTimer/ScopedTimer.h"
 
-#if (defined(_WIN32) || defined(__WIN32__))
-#define mkdir(A, B) mkdir(A)
-#endif
 
 using namespace MatrixOps;
 using namespace Activations;
@@ -124,9 +121,8 @@ float NeuralNetwork::predict(Image **images, int n)
 void NeuralNetwork::save(std::string filePath)
 {
     // Save model to disk
-    mkdir(filePath.c_str(), 0777);
-    chdir(filePath.c_str());
-    std::ofstream file("descriptor", std::ios::out | std::ios::binary);
+    std::filesystem::create_directory(filePath);
+    std::ofstream file(filePath + "/descriptor", std::ios::out | std::ios::binary);
 
     if (!file)
     {
@@ -146,17 +142,14 @@ void NeuralNetwork::save(std::string filePath)
         exit(EXIT_FAILURE);
     }
 
-    hiddenWeights.save("hidden");
-    outputWeights.save("output");
-    chdir("-");
+    hiddenWeights.save(filePath + "/hidden");
+    outputWeights.save(filePath + "/output");
 }
 
 void NeuralNetwork::load(std::string filePath)
 {
     // Load a model from disk
-    mkdir(filePath.c_str(), 0777);
-    chdir(filePath.c_str());
-    std::ifstream file("descriptor", std::ios::binary);
+    std::ifstream file(filePath + "/descriptor", std::ios::binary);
 
     if (!file)
     {
@@ -176,9 +169,8 @@ void NeuralNetwork::load(std::string filePath)
         exit(EXIT_FAILURE);
     }
 
-    hiddenWeights.load("hidden");
-    outputWeights.load("output");
-    chdir("-");
+    hiddenWeights.load(filePath + "/hidden");
+    outputWeights.load(filePath + "/output");
 }
 
 NeuralNetwork::NeuralNetwork(std::string filePath)
