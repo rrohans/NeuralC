@@ -8,7 +8,7 @@
 
 #include "Utils/ProgressBar/ProgressBar.h"
 
-Matrix stringToMatrix(const std::string& data);
+Matrix stringToMatrix(const std::string& data, int rows, int cols);
 
 int main(int argc, char** argv)
 {
