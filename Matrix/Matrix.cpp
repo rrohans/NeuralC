@@ -259,6 +259,37 @@ float Matrix::operator()(int i, int j)
     return data[i][j];
 }
 
+Cuda_Array<float> Matrix::toCudaArray()
+{
+    int size = numRows * numCols;
+
+    Cuda_Array<float> result;
+    float* temp = new float[size];
+
+    for (int i = 0; i < numRows; i++)
+        for (int j = 0; j < numCols; j++)
+            temp[i * numCols + j] = data[i][j];
+
+    result.set(temp, size);
+
+    delete[] temp;
+    
+    return result;
+}
+
+void Matrix::fromCudaArray(Cuda_Array<float> arr, int rows, int cols)
+{
+    float* temp = new float[rows * cols];
+
+    arr.get(temp, rows * cols);
+
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            data[i][j] = temp[i * cols + j];
+
+    delete[] temp;
+}
+
 
 
 Matrix::Matrix() = default;

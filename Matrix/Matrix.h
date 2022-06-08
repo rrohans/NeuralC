@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "../Utils/CudaArray/CudaArray.h"
+
 struct Matrix
 {
     // member variables
@@ -44,5 +46,9 @@ struct Matrix
     void copy(Matrix m);
 
     float operator() (int i, int j);
+
+    Cuda_Array<float> toCudaArray();
+
+    void fromCudaArray(Cuda_Array<float> arr, int rows, int cols);
 
 };

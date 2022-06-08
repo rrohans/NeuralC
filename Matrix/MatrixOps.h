@@ -16,6 +16,8 @@ namespace MatrixOps
 
     Matrix multiply(Matrix &m1, Matrix &m2);
 
+    Matrix cudaMultiply(Matrix& m1, Matrix& m2);
+
     Matrix map(float (*f)(float), Matrix &m);
 
     Matrix add(Matrix &m, float c);

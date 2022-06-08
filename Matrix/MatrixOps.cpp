@@ -2,6 +2,8 @@
 
 #include "MatrixOps.h"
 
+#include "./cuda/MatrixKernel.h"
+
 #define RANDOM_SCALE 1000
 
  bool MatrixOps::verifyDimensions(Matrix &m1, Matrix &m2)
@@ -84,6 +86,28 @@ Matrix MatrixOps::multiply(Matrix &m1, Matrix &m2)
 
             result.data[i][j] = sum;
         }
+
+    return result;
+}
+
+Matrix MatrixOps::cudaMultiply(Matrix& m1, Matrix& m2)
+{
+    // perform matrix multiplication using GPU
+    if (m1.numCols != m2.numRows)
+    {
+        printf("Dimension mismatch %dx%d %dx%d", m1.numRows, m1.numCols, m2.numRows, m2.numCols);
+        exit(EXIT_FAILURE);
+    }
+
+    Matrix result(m1.numRows, m2.numCols);
+
+    auto m1Cuda = m1.toCudaArray();
+    auto m2Cuda = m2.toCudaArray();
+    auto resultCuda = result.toCudaArray();
+
+    cudaMatrixMultiply(m1Cuda.getData(), m2Cuda.getData(), resultCuda.getData(), m1.numRows, m1.numCols, m2.numRows, m2.numCols, result.numRows, result.numCols);
+
+    result.fromCudaArray(resultCuda, m1.numRows, m2.numCols);
 
     return result;
 }

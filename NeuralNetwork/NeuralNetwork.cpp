@@ -32,9 +32,9 @@ NeuralNetwork::NeuralNetwork(int input, int hidden, int output, float lRate)
 void NeuralNetwork::train(Matrix &input, Matrix &output)
 {
     // perform feed forward
-    auto hiddenInputs = multiply(hiddenWeights, input);
+    auto hiddenInputs = cudaMultiply(hiddenWeights, input);
     auto hiddenOutputs = map(sigmoid, hiddenInputs);
-    auto finalInputs = multiply(outputWeights, hiddenOutputs);
+    auto finalInputs = cudaMultiply(outputWeights, hiddenOutputs);
     auto finalOutputs = map(sigmoid, finalInputs);
 
     // calculate errors
@@ -46,7 +46,7 @@ void NeuralNetwork::train(Matrix &input, Matrix &output)
     auto sigmoidPrimed = sigmoidPrimeValues(finalOutputs);
     auto multiplySPV = elementwiseMultiply(outputErrors, sigmoidPrimed);
     auto transposedHiddenOutputs = transpose(hiddenOutputs);
-    auto dMatrix = multiply(multiplySPV, transposedHiddenOutputs);
+    auto dMatrix = cudaMultiply(multiplySPV, transposedHiddenOutputs);
     auto sMatrix = scale(dMatrix, learningRate);
     auto aMatrix = add(outputWeights, sMatrix);
     outputWeights.copy(aMatrix);
@@ -55,7 +55,7 @@ void NeuralNetwork::train(Matrix &input, Matrix &output)
     auto sigmoidPrimed2 = sigmoidPrimeValues(hiddenOutputs);
     auto multiplySPV2 = elementwiseMultiply(hiddenErrors, sigmoidPrimed2);
     auto transposedInputs = transpose(input);
-    auto dMatrix2 = multiply(multiplySPV2, transposedInputs);
+    auto dMatrix2 = cudaMultiply(multiplySPV2, transposedInputs);
     auto sMatrix2 = scale(dMatrix2, learningRate);
     auto aMatrix2 = add(hiddenWeights, sMatrix2);
     hiddenWeights.copy(aMatrix2);
