@@ -7,7 +7,7 @@ struct Matrix
 {
     // member variables
     int numRows = 0, numCols = 0;
-    std::vector<std::vector<float>> data;
+    std::vector<float> data;
 
     // constructors/destructors
     Matrix();
@@ -43,6 +43,6 @@ struct Matrix
 
     void copy(Matrix m);
 
-    float operator() (int i, int j);
+    float operator()(int i, int j);
 
 };

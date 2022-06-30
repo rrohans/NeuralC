@@ -8,9 +8,9 @@
 
 #include "Utils/ProgressBar/ProgressBar.h"
 
-Matrix stringToMatrix(const std::string& data, int rows, int cols);
+Matrix stringToMatrix(const std::string &data, int rows, int cols);
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     srand(time(0)); // seed rand
 
@@ -41,27 +41,27 @@ int main(int argc, char** argv)
     return 0;
 }
 
-Matrix stringToMatrix(const std::string& data, int rows, int cols)
-{
-    Matrix m(rows, cols);
-    std::vector<std::vector<float>> t(rows);
-
-    for (auto & i : t)
-        i = std::vector<float>(cols);
-
-    std::stringstream test(data);
-    std::string segment;
-    std::vector<std::string> seglist;
-    while(std::getline(test, segment, ','))
-    {
-        seglist.push_back(segment);
-    }
-
-    for (int i = 0; i < t.size(); i++)
-        for (int j = 0; j < t[0].size(); j++)
-            t[i][j] = atoi(seglist[i*t.size()+j].c_str()) / 255.0;
-
-    m.data = t;
-
-    return m;
-}
+//Matrix stringToMatrix(const std::string& data, int rows, int cols)
+//{
+//    Matrix m(rows, cols);
+//    std::vector<std::vector<float>> t(rows);
+//
+//    for (auto & i : t)
+//        i = std::vector<float>(cols);
+//
+//    std::stringstream test(data);
+//    std::string segment;
+//    std::vector<std::string> seglist;
+//    while(std::getline(test, segment, ','))
+//    {
+//        seglist.push_back(segment);
+//    }
+//
+//    for (int i = 0; i < t.size(); i++)
+//        for (int j = 0; j < t[0].size(); j++)
+//            t[i][j] = atoi(seglist[i*t.size()+j].c_str()) / 255.0;
+//
+//    m.data = t;
+//
+//    return m;
+//}

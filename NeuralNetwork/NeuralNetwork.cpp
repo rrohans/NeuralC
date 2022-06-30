@@ -78,7 +78,7 @@ void NeuralNetwork::batchTrainImages(Image **images, int batchSize, int epochs)
             auto currentImage = images[i];
             currentImage->imageData.flatten(0);
             Matrix output(10, 1);
-            output.data[currentImage->label][0] = 1;
+            output.data[currentImage->label * output.numCols] = 1;
             train(currentImage->imageData, output);
 
             loss += calculateLoss(currentImage);
@@ -198,7 +198,7 @@ float NeuralNetwork::calculateLoss(Image *image)
     auto result = feedForward(image->imageData);
     result.flatten(0);
 
-    auto weight = result.data[result.argMax()][0];
+    auto weight = result.data[result.argMax() * result.numCols];
 
     return (float) std::pow((weight - 1.0), 2);
 
