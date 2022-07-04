@@ -1,4 +1,3 @@
-#include <iostream>
 
 #include "MatrixOps.h"
 
@@ -124,8 +123,12 @@ Matrix MatrixOps::transpose(Matrix &m)
     // transpose a given matrix
     Matrix result(m.numCols, m.numRows);
 
-    for (int i = 0; i < m.numRows * m.numCols; i++)
-        result.data[i] = m.data[i];
+    int rows = m.numRows;
+    int cols = m.numCols;
+
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            result.data[j * cols + i] = m.data[i * cols + j];
 
     return result;
 }

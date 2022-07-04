@@ -152,14 +152,10 @@ int Matrix::argMax() const
     }
 
     int maxIndex = 0;
-    float tmpMax = data[0];
 
-    for (int i = 0; i < numRows; i++)
-        if (tmpMax < data[i])
-        {
-            tmpMax = data[i];
+    for (int i = 0; i < numRows * numCols; i++)
+        if (data[maxIndex] < data[i])
             maxIndex = i;
-        }
 
     return maxIndex;
 }
