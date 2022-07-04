@@ -14,9 +14,8 @@ Matrix::Matrix(int rows, int cols)
     create();
 
     // set data entries to 0
-    for (int i = 0; i < numRows; i++)
-        for (int j = 0; j < numCols; j++)
-            data[i * numCols + j] = 0;
+    for (int i = 0; i < numRows * numCols; i++)
+        data[i] = 0;
 }
 
 Matrix::Matrix(const std::string &fileName)
@@ -38,9 +37,8 @@ Matrix::Matrix(int size)
 void Matrix::fill(float n)
 {
     // fill matrix with provided value
-    for (int i = 0; i < numRows; i++)
-        for (int j = 0; j < numCols; j++)
-            data[i * numCols + j] = n;
+    for (int i = 0; i < numRows * numCols; i++)
+        data[i] = n;
 }
 
 void Matrix::print() const
@@ -127,38 +125,16 @@ void Matrix::flatten(int axis)
         exit(EXIT_FAILURE);
     }
 
+    int numOfEntries = numRows * numCols;
+
     if (axis == 0)
     {
-        auto oldData = data;
-        int numOfEntries = numRows * numCols;
-
-        data.clear();
-        data = std::vector<float>(numOfEntries);
-
-        // fill old data into new matrix
-        for (int i = 0; i < numRows; i++)
-            for (int j = 0; j < numCols; j++)
-                data[i * numCols + j] = oldData[i * numCols + j];
-
         numRows = numOfEntries;
         numCols = 1;
-
     } else
     {
-        auto oldData = data;
-        int numOfEntries = numRows * numCols;
-
-        data.clear();
-        data = std::vector<float>(numOfEntries);
-
-        // fill old data into new matrix
-        for (int i = 0; i < numRows; i++)
-            for (int j = 0; j < numCols; j++)
-                data[i * numRows + j] = oldData[i * numCols + j];
-
         numRows = 1;
         numCols = numOfEntries;
-
     }
 }
 
@@ -225,11 +201,10 @@ void Matrix::randomize(int n)
 {
     // randomize the entries for the matrix
     // values will range from -1/sqrt(n) to 1/sqrt(n)
-    for (int i = 0; i < numRows; i++)
-        for (int j = 0; j < numCols; j++)
-        {
-            data[i * numCols + j] = MatrixOps::uniformDist(float(-1 / sqrt(n)), float(1 / sqrt(n)));
-        }
+    for (int i = 0; i < numCols * numRows; i++)
+    {
+        data[i] = MatrixOps::uniformDist(float(-1 / sqrt(n)), float(1 / sqrt(n)));
+    }
 }
 
 void Matrix::copy(Matrix m)
@@ -244,16 +219,15 @@ void Matrix::copy(Matrix m)
     numRows = m.numRows;
     numCols = m.numCols;
 
-    for (int i = 0; i < numRows; i++)
-        for (int j = 0; j < numCols; j++)
-            data[i * numCols + j] = m.data[i * numCols + j];
+
+    for (int i = 0; i < numCols * numRows; i++)
+        data[i] = m.data[i];
 }
 
 float Matrix::operator()(int i, int j)
 {
     return data[i * numCols + j];
 }
-
 
 
 Matrix::Matrix() = default;

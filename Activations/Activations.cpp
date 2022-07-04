@@ -47,15 +47,13 @@ Matrix Activations::softmax(Matrix &m)
 {
     float sum = 0.0f;
 
-    for (int i = 0; i < m.numRows; i++)
-        for (int j = 0; j < m.numCols; j++)
-            sum += std::exp(m.data[i * m.numCols + j]);
+    for (int i = 0; i < m.numCols * m.numRows; i++)
+        sum += std::exp(m.data[i]);
 
     Matrix result(m.numRows, m.numCols);
 
-    for (int i = 0; i < result.numRows; i++)
-        for (int j = 0; j < result.numCols; j++)
-            result.data[i * result.numCols + j] = std::exp(m.data[i * m.numCols + j]) / sum;
+    for (int i = 0; i < m.numCols * m.numRows; i++)
+        result.data[i] = std::exp(m.data[i]) / sum;
 
     return result;
 }
