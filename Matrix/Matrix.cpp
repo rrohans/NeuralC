@@ -16,7 +16,7 @@ Matrix::Matrix(int rows, int cols)
     // set data entries to 0
     for (int i = 0; i < numRows; i++)
         for (int j = 0; j < numCols; j++)
-            data[i][j] = 0;
+            data[i * numCols + j] = 0;
 }
 
 Matrix::Matrix(const std::string &fileName)
@@ -40,7 +40,7 @@ void Matrix::fill(float n)
     // fill matrix with provided value
     for (int i = 0; i < numRows; i++)
         for (int j = 0; j < numCols; j++)
-            data[i][j] = n;
+            data[i * numCols + j] = n;
 }
 
 void Matrix::print() const
@@ -50,7 +50,7 @@ void Matrix::print() const
     {
         for (int j = 0; j < numCols; j++)
         {
-            printf("%.2lf ", data[i][j]);
+            printf("%.2lf ", data[i * numCols + j]);
         }
         printf("\n");
     }
@@ -75,7 +75,7 @@ void Matrix::save(const std::string &fileName) const
     // write data of matrix
     for (int i = 0; i < numRows; i++)
         for (int j = 0; j < numCols; j++)
-            file.write((char *) &data[i][j], sizeof(float));
+            file.write((char *) &data[i * numCols + j], sizeof(float));
 
     file.close();
 
@@ -105,7 +105,7 @@ void Matrix::load(const std::string &fileName)
 
     for (int i = 0; i < numRows; i++)
         for (int j = 0; j < numCols; j++)
-            file.read((char *) &data[i][j], sizeof(float));
+            file.read((char *) &data[i * numCols + j], sizeof(float));
 
     file.close();
 
@@ -133,14 +133,12 @@ void Matrix::flatten(int axis)
         int numOfEntries = numRows * numCols;
 
         data.clear();
-        data = std::vector<std::vector<float>>(numOfEntries);
-        for (int i = 0; i < numOfEntries; i++)
-            data[i] = std::vector<float>(1);
+        data = std::vector<float>(numOfEntries);
 
         // fill old data into new matrix
         for (int i = 0; i < numRows; i++)
             for (int j = 0; j < numCols; j++)
-                data[i * numCols + j][0] = oldData[i][j];
+                data[i * numCols + j] = oldData[i * numCols + j];
 
         numRows = numOfEntries;
         numCols = 1;
@@ -151,13 +149,12 @@ void Matrix::flatten(int axis)
         int numOfEntries = numRows * numCols;
 
         data.clear();
-        data = std::vector<std::vector<float>>(numOfEntries);
-        data[0] = std::vector<float>(numOfEntries);
+        data = std::vector<float>(numOfEntries);
 
         // fill old data into new matrix
         for (int i = 0; i < numRows; i++)
             for (int j = 0; j < numCols; j++)
-                data[0][i * numRows + j] = oldData[i][j];
+                data[i * numRows + j] = oldData[i * numCols + j];
 
         numRows = 1;
         numCols = numOfEntries;
@@ -177,12 +174,12 @@ int Matrix::argMax() const
     }
 
     int maxIndex = 0;
-    float tmpMax = data[0][0];
+    float tmpMax = data[0];
 
     for (int i = 0; i < numRows; i++)
-        if (tmpMax < data[i][0])
+        if (tmpMax < data[i])
         {
-            tmpMax = data[i][0];
+            tmpMax = data[i];
             maxIndex = i;
         }
 
@@ -214,15 +211,13 @@ void Matrix::eye()
 
     zeros();
     for (int i = 0; i < numRows; i++)
-        data[i][i] = 1;
+        data[i * numCols + i] = 1;
 }
 
 void Matrix::create()
 {
     // create/recreate data array
-    data = std::vector<std::vector<float>>(numRows);
-    for (auto &i: data)
-        i = std::vector<float>(numCols);
+    data = std::vector<float>(numRows * numCols);
 
 }
 
@@ -233,7 +228,7 @@ void Matrix::randomize(int n)
     for (int i = 0; i < numRows; i++)
         for (int j = 0; j < numCols; j++)
         {
-            data[i][j] = MatrixOps::uniformDist(float(-1 / sqrt(n)), float(1 / sqrt(n)));
+            data[i * numCols + j] = MatrixOps::uniformDist(float(-1 / sqrt(n)), float(1 / sqrt(n)));
         }
 }
 
@@ -251,12 +246,12 @@ void Matrix::copy(Matrix m)
 
     for (int i = 0; i < numRows; i++)
         for (int j = 0; j < numCols; j++)
-            data[i][j] = m.data[i][j];
+            data[i * numCols + j] = m.data[i * numCols + j];
 }
 
 float Matrix::operator()(int i, int j)
 {
-    return data[i][j];
+    return data[i * numCols + j];
 }
 
 
