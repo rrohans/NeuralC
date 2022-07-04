@@ -8,9 +8,9 @@
 
 #include "Utils/ProgressBar/ProgressBar.h"
 
-Matrix stringToMatrix(const std::string& data, int rows, int cols);
+Matrix stringToMatrix(const std::string &data, int rows, int cols);
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     srand(time(0)); // seed rand
 
