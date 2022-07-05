@@ -77,7 +77,7 @@ void NeuralNetwork::batchTrainImages(Image **images, int batchSize, int epochs)
         {
             auto currentImage = images[i];
             currentImage->imageData.flatten(0);
-            Matrix output(10, 1);
+            Matrix output(this->outputLayer, 1);
             output.data[currentImage->label][0] = 1;
             train(currentImage->imageData, output);
 
