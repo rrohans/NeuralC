@@ -4,7 +4,7 @@
 
 #define RANDOM_SCALE 1000
 
- bool MatrixOps::verifyDimensions(Matrix &m1, Matrix &m2)
+bool MatrixOps::verifyDimensions(Matrix &m1, Matrix &m2)
 {
     // verify that matrices are of the same dimensions
     return (m1.numRows == m2.numRows) && (m1.numCols == m2.numCols);
@@ -21,9 +21,8 @@ Matrix MatrixOps::add(Matrix &m1, Matrix &m2)
 
     Matrix result(m1.numRows, m1.numCols);
 
-    for (int i = 0; i < m1.numRows; i++)
-        for (int j = 0; j < m1.numCols; j++)
-            result.data[i][j] = m1.data[i][j] + m2.data[i][j];
+    for (int i = 0; i < result.numCols * result.numRows; i++)
+        result.data[i] = m1.data[i] + m2.data[i];
 
     return result;
 }
@@ -39,9 +38,8 @@ Matrix MatrixOps::subtract(Matrix &m1, Matrix &m2)
 
     Matrix result(m1.numRows, m1.numCols);
 
-    for (int i = 0; i < m1.numRows; i++)
-        for (int j = 0; j < m1.numCols; j++)
-            result.data[i][j] = m1.data[i][j] - m2.data[i][j];
+    for (int i = 0; i < result.numCols * result.numRows; i++)
+        result.data[i] = m1.data[i] - m2.data[i];
 
     return result;
 }
@@ -57,9 +55,8 @@ Matrix MatrixOps::elementwiseMultiply(Matrix &m1, Matrix &m2)
 
     Matrix result(m1.numRows, m1.numCols);
 
-    for (int i = 0; i < m1.numRows; i++)
-        for (int j = 0; j < m1.numCols; j++)
-            result.data[i][j] = m1.data[i][j] * m2.data[i][j];
+    for (int i = 0; i < result.numCols * result.numRows; i++)
+        result.data[i] = m1.data[i] * m2.data[i];
 
     return result;
 }
@@ -80,9 +77,9 @@ Matrix MatrixOps::multiply(Matrix &m1, Matrix &m2)
         {
             float sum = 0.0f;
             for (int k = 0; k < m2.numRows; k++)
-                sum += m1.data[i][k] * m2.data[k][j];
+                sum += m1.data[i * m1.numCols + k] * m2.data[k * m2.numCols + j];
 
-            result.data[i][j] = sum;
+            result.data[i * result.numCols + j] = sum;
         }
 
     return result;
@@ -94,9 +91,8 @@ Matrix MatrixOps::map(float (*f)(float), Matrix &m)
     // of the matrix
     Matrix result(m.numRows, m.numCols);
 
-    for (int i = 0; i < m.numRows; i++)
-        for (int j = 0; j < m.numCols; j++)
-            result.data[i][j] = (*f)(m.data[i][j]);
+    for (int i = 0; i < result.numCols * result.numRows; i++)
+        result.data[i] = (*f)(m.data[i]);
 
     return result;
 }
@@ -106,9 +102,8 @@ Matrix MatrixOps::add(Matrix &m, float c)
     // add a scalar to each element
     Matrix result(m.numRows, m.numCols);
 
-    for (int i = 0; i < m.numRows; i++)
-        for (int j = 0; j < m.numCols; j++)
-            result.data[i][j] = m.data[i][j] + c;
+    for (int i = 0; i < result.numCols * result.numRows; i++)
+        result.data[i] = m.data[i] + c;
 
     return result;
 }
@@ -118,9 +113,8 @@ Matrix MatrixOps::scale(Matrix &m, float c)
     //  scale each element
     Matrix result(m.numRows, m.numCols);
 
-    for (int i = 0; i < m.numRows; i++)
-        for (int j = 0; j < m.numCols; j++)
-            result.data[i][j] = m.data[i][j] * c;
+    for (int i = 0; i < result.numCols * result.numRows; i++)
+        result.data[i] = m.data[i] * c;
 
     return result;
 }
@@ -132,7 +126,7 @@ Matrix MatrixOps::transpose(Matrix &m)
 
     for (int i = 0; i < m.numRows; i++)
         for (int j = 0; j < m.numCols; j++)
-            result.data[j][i] = m.data[i][j];
+            result.data[j * result.numCols + i] = m.data[i * m.numCols + j];
 
     return result;
 }

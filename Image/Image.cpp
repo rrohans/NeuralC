@@ -43,7 +43,7 @@ Image **Image::readDataset(const std::string &fileName, int numberOfImages)
             if (character == 0)
                 images[image]->label = std::stoi(value);
             else
-                images[image]->imageData.data[(character - 1) / 28][(character - 1) % 28] =
+                images[image]->imageData.data[((character - 1) / 28) * 28 + ((character - 1) % 28)] =
                         (float) std::stoi(value) / 255.0f;
 
             character++;
