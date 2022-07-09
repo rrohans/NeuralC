@@ -36,5 +36,6 @@ NeuralNetwork
 |       ---- ProgressBar/
 |               - Simple ASCII progress bar
 |       ---- ScopedTimer/
-|               - Timing class that beings and ends when an instance enters and leaves its current scope 
+|               - Timing class that beings and ends when an instance enters and leaves 
+|                 its current scope 
 ```
