@@ -35,8 +35,6 @@ int main(int argc, char **argv)
     printf("Train - Percent correct: %.3f %%\n", nn.predict(images, numTrainImages) * 100);
     printf("Test - Percent correct: %.3f %%\n", nn.predict(testImages, numTestImages) * 100);
 
-    delete[] images;
-    delete[] testImages;
 
     return 0;
 }

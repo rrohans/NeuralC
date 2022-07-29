@@ -61,7 +61,7 @@ void NeuralNetwork::train(Matrix &input, Matrix &output)
     hiddenWeights.copy(aMatrix2);
 }
 
-void NeuralNetwork::batchTrainImages(Image **images, int batchSize, int epochs)
+void NeuralNetwork::batchTrainImages(std::vector<Image> &images, int batchSize, int epochs)
 {
     ProgressBar p(0, epochs);
     ScopedTimer t("Batch Train");
@@ -76,10 +76,10 @@ void NeuralNetwork::batchTrainImages(Image **images, int batchSize, int epochs)
         for (int i = 0; i < batchSize; i++)
         {
             auto currentImage = images[i];
-            currentImage->imageData.flatten(0);
+            currentImage.imageData.flatten(0);
             Matrix output(this->outputLayer, 1);
-            output.data[currentImage->label] = 1;
-            train(currentImage->imageData, output);
+            output.data[currentImage.label] = 1;
+            train(currentImage.imageData, output);
 
             loss += calculateLoss(currentImage);
 
@@ -93,29 +93,29 @@ void NeuralNetwork::batchTrainImages(Image **images, int batchSize, int epochs)
     }
 }
 
-int NeuralNetwork::predict(Image *image)
+int NeuralNetwork::predict(Image &image)
 {
     // predict label given image
-    image->imageData.flatten(0);
+    image.imageData.flatten(0);
 
-    auto result = feedForward(image->imageData);
+    auto result = feedForward(image.imageData);
     result.flatten(0);
 
     return result.argMax();
 }
 
-float NeuralNetwork::predict(Image **images, int n)
+float NeuralNetwork::predict(std::vector<Image> &images, int number)
 {
     // predicts the first n images and returns percentage correct
     int numberCorrect = 0;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < number; i++)
     {
         auto prediction = predict(images[i]);
-        if (prediction == images[i]->label)
+        if (prediction == images[i].label)
             numberCorrect++;
     }
 
-    return (float) numberCorrect / (float) n;
+    return (float) numberCorrect / (float) number;
 }
 
 void NeuralNetwork::save(std::string filePath)
@@ -190,12 +190,12 @@ void NeuralNetwork::print() const
     outputWeights.print();
 }
 
-float NeuralNetwork::calculateLoss(Image *image)
+float NeuralNetwork::calculateLoss(Image &image)
 {
     // predict label given image
-    image->imageData.flatten(0);
+    image.imageData.flatten(0);
 
-    auto result = feedForward(image->imageData);
+    auto result = feedForward(image.imageData);
     result.flatten(0);
 
     auto weight = result.data[result.argMax()];

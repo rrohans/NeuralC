@@ -16,11 +16,11 @@ struct NeuralNetwork
     explicit NeuralNetwork(std::string filePath);
 
     // member methods
-    void batchTrainImages(Image **images, int batchSize, int epochs);
+    void batchTrainImages(std::vector<Image> &images, int batchSize, int epochs);
 
-    int predict(Image *image);
+    int predict(Image &image);
 
-    float predict(Image **images, int number);
+    float predict(std::vector<Image> &images, int number);
 
     void save(std::string filePath);
 
@@ -28,7 +28,7 @@ struct NeuralNetwork
 
     void print() const;
 
-    float calculateLoss(Image *image);
+    float calculateLoss(Image &image);
 
 private:
     void train(Matrix &input, Matrix &output);

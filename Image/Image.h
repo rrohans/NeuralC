@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "../Matrix/Matrix.h"
 
 struct Image
@@ -12,5 +14,5 @@ struct Image
     // member methods
     void print() const;
 
-    static Image **readDataset(const std::string &fileName, int numberOfImages, int rows = 28, int cols = 28);
+    static std::vector<Image> readDataset(const std::string &fileName, int numberOfImages, int rows = 28, int cols = 28);
 };

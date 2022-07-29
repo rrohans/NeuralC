@@ -11,10 +11,11 @@ void Image::print() const
     imageData.print();
 }
 
-Image **Image::readDataset(const std::string &fileName, int numberOfImages, int rows, int cols)
+std::vector<Image> Image::readDataset(const std::string &fileName, int numberOfImages, int rows, int cols)
 {
     // load images from a csv file and return an array to them
-    Image **images = new Image *[numberOfImages];
+    std::vector<Image> images;
+    images.reserve(numberOfImages);
 
     std::ifstream file(fileName, std::ios::in);
 
@@ -30,7 +31,7 @@ Image **Image::readDataset(const std::string &fileName, int numberOfImages, int 
     std::getline(file, line); // skip first line
     while (std::getline(file, line) && image < numberOfImages)
     {
-        images[image] = new Image(rows, cols);
+        images[image] = Image(rows, cols);
 
         int character = 0;
         std::stringstream str(line);
@@ -38,9 +39,9 @@ Image **Image::readDataset(const std::string &fileName, int numberOfImages, int 
         while (std::getline(str, value, ','))
         {
             if (character == 0)
-                images[image]->label = std::stoi(value);
+                images[image].label = std::stoi(value);
             else
-                images[image]->imageData.data[character - 1] = (float) std::stoi(value) / 255.0f;
+                images[image].imageData.data[character - 1] = (float) std::stoi(value) / 255.0f;
 
             character++;
         }
