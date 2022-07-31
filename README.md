@@ -1,6 +1,4 @@
-# Neural Network In C++
-
-## Description:
+# NeuralC
 
 A custom Neural Network framework written in C++ with a from-scratch Matrix Math Library without any external
 dependencies.
@@ -13,7 +11,6 @@ respective datasets.
 ### CLion or Visual Studio
 
 Simply clone the repository and use the top-level CMakeLists.txt file to build the project.
-
 
 ## File Structure:
 
