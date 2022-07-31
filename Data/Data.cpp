@@ -11,13 +11,16 @@ void Data::print() const
     imageData.print();
 }
 
-std::vector<Data> Data::readDataset(const std::string &fileName, int numberOfEntries, int rows, int cols)
+std::vector<Data> Data::readDataset(const std::string &fileName, int rows, int cols)
 {
     // load images from a csv file and return an array to them
-    std::vector<Data> images;
-    images.reserve(numberOfEntries);
-
     std::ifstream file(fileName, std::ios::in);
+
+    int numOfEntries = (int) std::count(std::istreambuf_iterator<char>(file),
+            std::istreambuf_iterator<char>(), '\n') - 2;
+
+    file.clear();
+    file.seekg(0);
 
     if (!file)
     {
@@ -25,11 +28,14 @@ std::vector<Data> Data::readDataset(const std::string &fileName, int numberOfEnt
         exit(EXIT_FAILURE);
     }
 
+    std::vector<Data> images;
+    images.reserve(numOfEntries);
+
     int image = 0;
     std::string line, value;
 
     std::getline(file, line); // skip first line
-    while (std::getline(file, line) && image < numberOfEntries)
+    while (std::getline(file, line) && image < numOfEntries)
     {
         images[image] = Data(rows, cols);
 

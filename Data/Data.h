@@ -14,5 +14,5 @@ struct Data
     // member methods
     void print() const;
 
-    static std::vector<Data> readDataset(const std::string &fileName, int numberOfEntries, int rows = 28, int cols = 28);
+    static std::vector<Data> readDataset(const std::string &fileName, int rows = 28, int cols = 28);
 };
