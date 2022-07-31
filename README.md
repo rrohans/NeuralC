@@ -20,8 +20,8 @@ NeuralNetwork
 |---- Activations/
 |       - Activation functions for the network
 |
-|---- Image/
-|       - Image class for reading in and normalizing data
+|---- Data/
+|       - Data class for reading in and normalizing data
 |
 |---- Matrix/
 |       - Complete Matrix class with associated math functionality

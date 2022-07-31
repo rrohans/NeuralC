@@ -3,7 +3,7 @@
 
 #include "Matrix/Matrix.h"
 #include "Matrix/MatrixOps.h"
-#include "Image/Image.h"
+#include "Data/Data.h"
 #include "NeuralNetwork/NeuralNetwork.h"
 
 #include "Utils/ProgressBar/ProgressBar.h"
@@ -20,8 +20,8 @@ int main(int argc, char **argv)
 
     // Load datasets
     printf("Loading images...\n");
-    auto images = Image::readDataset("mnist_train.csv", numTrainImages);
-    auto testImages = Image::readDataset("mnist_test.csv", numTestImages);
+    auto images = Data::readDataset("mnist_train.csv", numTrainImages);
+    auto testImages = Data::readDataset("mnist_test.csv", numTestImages);
 
 
     // Create/Load NN

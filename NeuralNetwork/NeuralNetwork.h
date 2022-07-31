@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Matrix/Matrix.h"
-#include "../Image/Image.h"
+#include "../Data/Data.h"
 
 struct NeuralNetwork
 {
@@ -16,11 +16,11 @@ struct NeuralNetwork
     explicit NeuralNetwork(std::string filePath);
 
     // member methods
-    void batchTrainImages(std::vector<Image> &images, int batchSize, int epochs);
+    void batchTrainImages(std::vector<Data> &images, int batchSize, int epochs);
 
-    int predict(Image &image);
+    int predict(Data &image);
 
-    float predict(std::vector<Image> &images, int number);
+    float predict(std::vector<Data> &images, int number);
 
     void save(std::string filePath);
 
@@ -28,7 +28,7 @@ struct NeuralNetwork
 
     void print() const;
 
-    float calculateLoss(Image &image);
+    float calculateLoss(Data &image);
 
 private:
     void train(Matrix &input, Matrix &output);

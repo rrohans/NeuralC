@@ -2,20 +2,20 @@
 #include <fstream>
 #include <sstream>
 
-#include "Image.h"
+#include "Data.h"
 
-void Image::print() const
+void Data::print() const
 {
     // print image to console
-    printf("Image label: %d\n", label);
+    printf("Data label: %d\n", label);
     imageData.print();
 }
 
-std::vector<Image> Image::readDataset(const std::string &fileName, int numberOfImages, int rows, int cols)
+std::vector<Data> Data::readDataset(const std::string &fileName, int numberOfEntries, int rows, int cols)
 {
     // load images from a csv file and return an array to them
-    std::vector<Image> images;
-    images.reserve(numberOfImages);
+    std::vector<Data> images;
+    images.reserve(numberOfEntries);
 
     std::ifstream file(fileName, std::ios::in);
 
@@ -29,9 +29,9 @@ std::vector<Image> Image::readDataset(const std::string &fileName, int numberOfI
     std::string line, value;
 
     std::getline(file, line); // skip first line
-    while (std::getline(file, line) && image < numberOfImages)
+    while (std::getline(file, line) && image < numberOfEntries)
     {
-        images[image] = Image(rows, cols);
+        images[image] = Data(rows, cols);
 
         int character = 0;
         std::stringstream str(line);
@@ -59,7 +59,7 @@ std::vector<Image> Image::readDataset(const std::string &fileName, int numberOfI
     return images;
 }
 
-Image::Image(int rows, int cols)
+Data::Data(int rows, int cols)
 {
     imageData = Matrix(rows, cols);
 }
