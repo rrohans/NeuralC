@@ -61,10 +61,12 @@ void NeuralNetwork::train(Matrix &input, Matrix &output)
     hiddenWeights.copy(aMatrix2);
 }
 
-void NeuralNetwork::batchTrainImages(std::vector<Data> &images, int batchSize, int epochs)
+void NeuralNetwork::batchTrainImages(std::vector<Data> &images, int epochs)
 {
     ProgressBar p(0, epochs);
     ScopedTimer t("Batch Train");
+
+    int batchSize = (int) images.capacity();
 
     float loss = 0.0f;
 
@@ -104,18 +106,18 @@ int NeuralNetwork::predict(Data &image)
     return result.argMax();
 }
 
-float NeuralNetwork::predict(std::vector<Data> &images, int number)
+float NeuralNetwork::predict(std::vector<Data> &images)
 {
     // predicts the first n images and returns percentage correct
     int numberCorrect = 0;
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < images.capacity(); i++)
     {
         auto prediction = predict(images[i]);
         if (prediction == images[i].label)
             numberCorrect++;
     }
 
-    return (float) numberCorrect / (float) number;
+    return (float) numberCorrect / (float) images.capacity();
 }
 
 void NeuralNetwork::save(std::string filePath)
