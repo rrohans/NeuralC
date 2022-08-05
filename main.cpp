@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
     // Create/Load NN
     NeuralNetwork nn(784, 300, 10, 0.2);
-//    NeuralNetwork nn("fullData");
+    // NeuralNetwork nn("fullData");
 
     // Train and then save model
     nn.batchTrainImages(images,  1);
@@ -30,7 +30,6 @@ int main(int argc, char **argv)
 
     printf("Train - Percent correct: %.3f %%\n", nn.predict(images) * 100);
     printf("Test - Percent correct: %.3f %%\n", nn.predict(testImages) * 100);
-
 
     return 0;
 }

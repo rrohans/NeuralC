@@ -12,6 +12,28 @@ respective datasets.
 
 Simply clone the repository and use the top-level CMakeLists.txt file to build the project.
 
+### Example Program:
+
+```c++
+    srand(time(0)); // seed rand
+
+    // Load datasets
+    printf("Loading images...\n");
+    auto images = Data::readDataset("mnist_train.csv");
+    auto testImages = Data::readDataset("mnist_test.csv");
+    
+    // Create or Load NN
+    NeuralNetwork nn(784, 300, 10, 0.2);
+    // NeuralNetwork nn("fullData");
+
+    // Train and then save model
+    nn.batchTrainImages(images,  1);
+    nn.save("model");
+
+    printf("Train - Percent correct: %.3f %%\n", nn.predict(images) * 100);
+    printf("Test - Percent correct: %.3f %%\n", nn.predict(testImages) * 100);
+```
+
 ## File Structure:
 
 ```
