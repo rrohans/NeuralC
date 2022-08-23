@@ -1,7 +1,7 @@
 # NeuralC
 
-A custom Neural Network framework written in C++ with a from-scratch Matrix Math Library without any external
-dependencies.
+A custom Neural Network GUI Application written in C++ with a from-scratch Matrix Math Library and 
+Dear ImGui.
 
 The network is designed around MNIST and E-MNIST style data and has shown accuracy of over 90% and 80% on their
 respective datasets.

@@ -15,4 +15,6 @@ struct Data
     void print() const;
 
     static std::vector<Data> readDataset(const std::string &fileName, int rows = 28, int cols = 28);
+
+    static void readDataset(const std::string &fileName, std::vector<Data> &images, int rows = 28, int cols = 28);
 };
