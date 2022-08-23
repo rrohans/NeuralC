@@ -42,8 +42,14 @@ NeuralNetwork
 |---- Activations/
 |       - Activation functions for the network
 |
+|---- Application/
+|       - GUI description code
+|
 |---- Data/
 |       - Data class for reading in and normalizing data
+|
+|---- ImGui
+|       - ImGui related files
 |
 |---- Matrix/
 |       - Complete Matrix class with associated math functionality
