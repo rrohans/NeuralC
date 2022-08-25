@@ -1,3 +1,5 @@
+#include <thread>
+
 #include "../ImGui/imgui.h"
 
 #include "Application.h"
@@ -8,6 +10,7 @@ void Application::onRender()
     debugWindow();
     trainDataWindow();
     testDataWindow();
+    modelWindow();
 }
 
 void Application::debugWindow() const
@@ -21,25 +24,32 @@ void Application::debugWindow() const
 
 void Application::trainDataWindow()
 {
-    ImGui::Begin("Train Data");
+    ImGui::Begin("Load Train Data");
 
     ImGui::Text("Train Data Size: %lu", trainData.size());
 
-    if (ImGui::Button("Load Test Dataset"))
-        fd.Open();
+    if (ImGui::Button("Load Dataset"))
+        fileBrowserFileOnly.Open();
 
-    if (ImGui::Button("Clear Dataset"))
+    if (!trainData.empty() && ImGui::Button("Clear Dataset"))
     {
         trainData.clear();
         trainData.shrink_to_fit();
     }
 
-    fd.Display();
+    fileBrowserFileOnly.Display();
 
-    if (fd.HasSelected())
+    if (fileBrowserFileOnly.HasSelected())
     {
-        Data::readDataset(fd.GetSelected().string(), trainData);
-        fd.ClearSelected();
+        std::string filePath = fileBrowserFileOnly.GetSelected().string();
+        fileBrowserFileOnly.ClearSelected();
+        auto f = [filePath, this]()
+        {
+            Data::readDataset(filePath, trainData);
+        };
+
+        std::thread t(f);
+        t.detach();
     }
 
     ImGui::End();
@@ -47,28 +57,88 @@ void Application::trainDataWindow()
 
 void Application::testDataWindow()
 {
-    ImGui::Begin("Test Data");
+    ImGui::Begin("Load Test Data");
 
     ImGui::Text("Test Data Size: %lu", testData.size());
 
-    if (ImGui::Button("Load Test Dataset"))
-        fd.Open();
+    if (ImGui::Button("Load Dataset"))
+        fileBrowserFileOnly.Open();
 
-    if (ImGui::Button("Clear Dataset"))
+    if (!testData.empty() && ImGui::Button("Clear Dataset"))
     {
         testData.clear();
         testData.shrink_to_fit();
     }
 
-    fd.Display();
+    fileBrowserFileOnly.Display();
 
-    if (fd.HasSelected())
+    if (fileBrowserFileOnly.HasSelected())
     {
-        Data::readDataset(fd.GetSelected().string(), testData);
-        fd.ClearSelected();
+        std::string filePath = fileBrowserFileOnly.GetSelected().string();
+        fileBrowserFileOnly.ClearSelected();
+        auto f = [filePath, this]()
+        {
+            Data::readDataset(filePath, testData);
+        };
+
+        std::thread t(f);
+        t.detach();
     }
 
     ImGui::End();
 }
 
-Application::Application() = default;
+void Application::modelWindow()
+{
+    ImGui::Begin("Model View");
+
+    if (load)
+        loadModelWindow();
+    else
+        createModelWindow();
+
+
+    if (nn.isLoadedFromFile)
+    {
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        ImGui::Text("Number of Nodes in Input Layer: %d", nn.inputLayer);
+        ImGui::Text("Number of Nodes in Hidden Layer: %d", nn.hiddenLayer);
+        ImGui::Text("Number of Nodes in Output Layer: %d", nn.outputLayer);
+        ImGui::Text("Learning Rate: %.2f", nn.learningRate);
+    }
+
+    ImGui::End();
+}
+
+void Application::loadModelWindow()
+{
+    if (ImGui::Button("Switch View"))
+        load = !load;
+
+    if (ImGui::Button("Load Model"))
+        fileBrowserDirOnly.Open();
+
+
+    fileBrowserDirOnly.Display();
+
+    if (fileBrowserDirOnly.HasSelected())
+    {
+        nn.load(fileBrowserDirOnly.GetSelected().string());
+        fileBrowserDirOnly.ClearSelected();
+    }
+
+}
+
+void Application::createModelWindow()
+{
+    if (ImGui::Button("Switch View"))
+        load = !load;
+}
+
+Application::Application()
+{
+    fileBrowserDirOnly = ImGui::FileBrowser(ImGuiFileBrowserFlags_SelectDirectory);
+}
