@@ -124,7 +124,6 @@ void Application::loadModelWindow()
 
     if (fileBrowserDirOnly.HasSelected())
     {
-//        nn.load(fileBrowserDirOnly.GetSelected().string());
         std::string filePath = fileBrowserDirOnly.GetSelected().string();
         fileBrowserDirOnly.ClearSelected();
 
