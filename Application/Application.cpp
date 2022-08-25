@@ -48,8 +48,7 @@ void Application::trainDataWindow()
             Data::readDataset(filePath, trainData);
         };
 
-        std::thread t(f);
-        t.detach();
+        std::thread(f).detach();
     }
 
     ImGui::End();
@@ -81,8 +80,7 @@ void Application::testDataWindow()
             Data::readDataset(filePath, testData);
         };
 
-        std::thread t(f);
-        t.detach();
+        std::thread(f).detach();
     }
 
     ImGui::End();
@@ -126,8 +124,16 @@ void Application::loadModelWindow()
 
     if (fileBrowserDirOnly.HasSelected())
     {
-        nn.load(fileBrowserDirOnly.GetSelected().string());
+//        nn.load(fileBrowserDirOnly.GetSelected().string());
+        std::string filePath = fileBrowserDirOnly.GetSelected().string();
         fileBrowserDirOnly.ClearSelected();
+
+        auto f = [filePath, this] ()
+        {
+            nn.load(filePath);
+        };
+
+        std::thread(f).detach();
     }
 
 }
