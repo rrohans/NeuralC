@@ -173,6 +173,8 @@ void NeuralNetwork::load(std::string filePath)
 
     hiddenWeights.load(filePath + "/hidden");
     outputWeights.load(filePath + "/output");
+
+    isLoadedFromFile = true;
 }
 
 NeuralNetwork::NeuralNetwork(std::string filePath)
@@ -216,3 +218,5 @@ Matrix NeuralNetwork::feedForward(Matrix m)
 
     return result;
 }
+
+NeuralNetwork::NeuralNetwork() = default;

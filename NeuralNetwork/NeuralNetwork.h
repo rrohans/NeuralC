@@ -11,6 +11,8 @@ struct NeuralNetwork
     Matrix hiddenWeights, outputWeights;
 
     // Constructors
+    NeuralNetwork();
+
     NeuralNetwork(int input, int hidden, int output, float lRate);
 
     explicit NeuralNetwork(std::string filePath);
@@ -30,6 +32,7 @@ struct NeuralNetwork
 
     float calculateLoss(Data &image);
 
+    bool isLoadedFromFile = false;
 private:
     void train(Matrix &input, Matrix &output);
 
